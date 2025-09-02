@@ -1,0 +1,14 @@
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - echo "Starting Travis CI build..."
+
+script:
+  - docker build -t $DOCKER_USERNAME/travis-docker-demo:$TRAVIS_COMMIT .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push $DOCKER_USERNAME/travis-docker-demo:$TRAVIS_COMMIT
+  - docker tag $DOCKER_USERNAME/travis-docker-demo:$TRAVIS_COMMIT $DOCKER_USERNAME/travis-docker-demo:latest
+  - docker push $DOCKER_USERNAME/travis-docker-demo:latest
